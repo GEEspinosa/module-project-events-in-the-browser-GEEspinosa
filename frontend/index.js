@@ -36,7 +36,12 @@ function moduleProject2() {
       square.classList.add('square')
       row.appendChild(square)
       square.addEventListener('click', () => {
-        // 👉 TASK 2 - Use a click handler to target a square 👈
+        // 👉 TASK 2 - Use a click handler to target a square 
+  
+        let allGrid = document.querySelectorAll('.square');
+        allGrid.forEach(square => square.classList.remove('targeted'))
+        square.classList.add('targeted')
+          
       })
     }
   }
@@ -66,10 +71,95 @@ function moduleProject2() {
   document.addEventListener('keydown', evt => {
     // 👉 TASK 3 - Use the arrow keys to highlight a new square 👈
 
+    if (evt.key === keys.up){//arrow up!
+      let currentSquare = document.querySelector('.targeted');
+      let rowX = currentSquare.parentElement
+      let rowY = currentSquare.parentElement.previousElementSibling
+    
+      if (rowY) {
+        const i = Array.from(rowX.children).indexOf(currentSquare);
+        currentSquare.classList.remove('targeted');
+        rowY.children[i].classList.add('targeted') 
+      }
+    }
+
+    if (evt.key === keys.down){//Arrow down!
+      let currentSquare = document.querySelector('.targeted');
+      let rowX = currentSquare.parentElement
+      let rowY = currentSquare.parentElement.nextElementSibling
+
+      if (rowY){
+        const i = Array.from(rowX.children).indexOf(currentSquare);
+        currentSquare.classList.remove('targeted');
+        rowY.children[i].classList.add('targeted') 
+      }
+    }
+
+    if (evt.key === keys.left){//Arrow left!
+      let currentSquare = document.querySelector('.targeted');
+      let columnY = currentSquare.previousElementSibling
+
+      if(columnY){
+        currentSquare.classList.remove('targeted');
+        columnY.classList.add('targeted')
+      } 
+    }
+
+    if (evt.key === keys.right){//Arrow right!
+      let currentSquare = document.querySelector('.targeted');
+      let columnY = currentSquare.nextElementSibling
+
+      if(columnY){
+        currentSquare.classList.remove('targeted');
+        columnY.classList.add('targeted')
+      } 
+    }
+
+
     // 👉 TASK 4 - Use the space bar to exterminate a mosquito 👈
 
+    if (evt.key === keys.space){//space bar exerminate
+      let currentSquare = document.querySelector('.targeted');
+      let image = document.querySelector('.targeted img')
+      
+      if (currentSquare.children.length > 0){
+        currentSquare.style.backgroundColor = 'red';
+        image.setAttribute('data-status', 'dead')
+      }
+    }
+
     // 👉 TASK 5 - End the game 👈
+
+    if (evt.key === keys.space){
+    
+      const allMosquitoSquares = Array.from(document.querySelectorAll('img'));
+      const paraInfo = document.querySelector('.info');
+      const headerTwo = document.querySelector('h2');
+
+      let count = allMosquitoSquares.length
+      
+      for (i = 0; i < allMosquitoSquares.length; i++){
+        if(allMosquitoSquares[i].getAttribute('data-status') === 'dead'){
+          count--  
+        }
+      }
+
+      if (count === 0){//end game
+        paraInfo.textContent = `Extermination completed in ${getTimeElapsed() * .001} seconds!`
+  
+        const restartButton = document.createElement('button')
+        restartButton.textContent = 'Restart'
+        headerTwo.appendChild(restartButton)
+
+        restartButton.addEventListener('click', evt => { 
+        window.location.reload();
+        })  
+      }
+
+    } 
+
   })
+ 
   // 👆 WORK WORK ABOVE THIS LINE 👆
 }
 
